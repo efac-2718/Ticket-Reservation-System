@@ -4,7 +4,7 @@ import com.example.ticketreservation.model.Reservation;
 import com.example.ticketreservation.model.ReservationStatus;
 
 public record ReservationResponse(
-    String id, String reservationCode, String eventID, String username,
+    String id, String reservationCode, String eventId, String username,
     int seats, double amount, ReservationStatus status
 ) {
     public static ReservationResponse from(Reservation r) {
