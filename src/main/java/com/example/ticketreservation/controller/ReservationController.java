@@ -52,7 +52,7 @@ public class ReservationController {
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
-    public ReservationResponse concel(@PathVariable String id, Authentication auth){
+    public ReservationResponse cancel(@PathVariable String id, Authentication auth){
         return reservationService.cancel(id, auth);
     } 
 }
