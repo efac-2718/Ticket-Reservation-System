@@ -55,7 +55,7 @@ public class ReservationService {
             List<String> myEventIds = eventRepository.findByOrganizer(auth.getName()).stream().map(Event::getId).toList();
             reservations = reservationRepository.findByEventIdIn(myEventIds);
         }
-        return reservationRepository.findAll().stream().map(ReservationResponse::from).toList();
+        return reservations.stream().map(ReservationResponse::from).toList();
     }
 
     public ReservationResponse cancel(String id, Authentication auth){
@@ -68,7 +68,7 @@ public class ReservationService {
         }
 
         if (r.getStatus() == ReservationStatus.CANCELLED) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "Reservation is already cancelled");
+            throw new ApiException(HttpStatus.CONFLICT, "Reservation is already cancelled");
         }
 
         eventService.releaseSeats(r.getEventId(), r.getSeats());
