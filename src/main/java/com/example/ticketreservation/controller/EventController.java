@@ -2,17 +2,17 @@ package com.example.ticketreservation.controller;
 
 import com.example.ticketreservation.dto.EventRequest;
 import com.example.ticketreservation.dto.EventResponse;
-import com.example.ticketreservation.repository.EventRepository;
 import com.example.ticketreservation.service.EventService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +31,7 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public String getAll(@RequestParam(required = false) String name) {
+    public List<EventResponse> getAll(@RequestParam(required = false) String name) {
         return eventService.findAll(name);
    }
     
@@ -43,7 +43,7 @@ public class EventController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','ORGANIZER')")
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest req, Authentication auth) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.create(req, auth.getName()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.create(req, auth));
     }
 
     @PutMapping("/{id}")
@@ -54,7 +54,7 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public RepositoryEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         eventService.delete(id);
         return ResponseEntity.noContent().build();
     }
